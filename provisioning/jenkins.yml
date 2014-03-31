@@ -41,4 +41,25 @@
         echo 'JAVA_ARGS="-Djava.awt.headless=true -Xmx512m"' >> /etc/default/jenkins
       tags: jenkins-ci
 
-      
+    - name: 20s delay while starting Jenkins for the first time
+      wait_for: port=8080 delay=10
+    
+    - name: JenkinsCI | Run Jenkins CI daemon
+      sudo: yes
+      service: name=jenkins state=restarted
+      tags: jenkins-ci
+    
+    # found some problems on Jenkins initialization that has not been fixed yet.
+    # - name: JenkinsCI | Download jenkins-cli.jar to /opt
+    #  sudo: yes
+    #  action: get_url url=http://localhost:8080/jnlpJars/jenkins-cli.jar dest=/opt mode=0440      
+    #  tags: jenkins-ci
+
+    # - name: JenkinsCI | Install GIT plugin for Jenkins CI 
+    #  sudo: yes
+    #  shell:
+    #    java -jar /opt/jenkins-cli.jar -s http://localhost:8080 install-plugin git
+    #  tags: jenkins-ci
+
+
+
