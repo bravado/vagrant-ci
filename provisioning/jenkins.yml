@@ -1,0 +1,44 @@
+---
+- hosts: all
+  user: vagrant
+
+  tasks:
+    - name: Common | Update apt cache
+      sudo: yes
+      apt: update-cache=yes
+      tags: common
+
+    - name: Common | Update language
+      sudo: yes
+      apt: pkg=language-pack-en
+      tags: common
+
+    - name: GIT | Install GIT 
+      sudo: yes
+      apt: pkg=git
+      tags: common
+
+    - name: JenkinsCI | Fetch GPG key
+      sudo: yes
+      shell: 
+        wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
+      tags: jenkins-ci
+
+    - name: JenkinsCI | Add Jenkins CI repository
+      sudo: yes
+      shell:
+        echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list
+      tags: jenkins-ci
+
+    - name: JenkinsCI | Install latest Jenkins CI
+      sudo: yes
+      apt: pkg=jenkins state=latest update-cache=yes
+      tags: jenkins-ci
+
+    - name: JenkinsCI | Custom Jenkins CI configuration
+      sudo: yes
+      shell:
+        echo 'JAVA_ARGS="-Djava.awt.headless=true -Xmx512m"' >> /etc/default/jenkins
+      tags: jenkins-ci
+
+      
