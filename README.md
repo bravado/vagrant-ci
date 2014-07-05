@@ -1,33 +1,30 @@
-# Bravado Server
+vagrant-ci
+==========
 
-Administration panel for Enterprise Servers
+This is a Vagrant, Ansible and Jenkins configuration setup.
 
-## Modules
+Jenkins CI - http://jenkins-ci.org/
 
-  * DNSMasq
-  * Users/Groups
-  * Proxy
+Vagrant - http://www.vagrantup.com/
 
-### Users and Groups
- Manages Samba/LDAP Accounts, compatible with smbldap-tools
+Ansible - http://www.ansible.com/home
 
-## Install
- Copy server-config.sample.php to ../server-config.php, edit file
+    $ vagrant up 
 
-# TODO
+Point your browser to http://localhost:8080 to test jenkins.
 
-Doc
-  * How to install samba, smbldap-tools properly
+If port 8080 is not available on the host, Vagrant will autocorrect the forwarding rule and use port 220x.
 
-Fixes
-  * USER_HOME parser, allow complex paths like /home/$user[0]/$user
+If you have some problem initializing Jenkins you can check the logs files and restart using the following commands:
 
-Tests
+    $ vagrant ssh
+    $ tail -f /var/log/jenkins/jenkins.log
+    $ sudo /etc/init.d/jenkins restart
 
-  * create user
-  * update user
-  * update user password
-  * delete user
-  * create group
-  * update group
-  * delete group
+TODO 
+
+- Create virtual machine for private GIT repository 
+- Write blog post 
+	- How to migrate ant projects to maven ?
+	- How to deploy on amazon and digital ocean ?
+
