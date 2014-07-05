@@ -1,0 +1,37 @@
+---
+- name: Apache Archiva 2.0.1 | Download Latest Version
+  sudo: yes
+  action: get_url url=http://www.us.apache.org/dist/archiva/2.0.1/binaries/apache-archiva-2.0.1-bin.tar.gz dest=/opt
+  tags: archiva
+
+- name: Apache Archiva 2.0 | Unpacking 
+  sudo: yes
+  shell: cd /opt; tar xzfv /opt/apache-archiva-2.0.1-bin.tar.gz 
+  tags: archiva
+
+- name: Apache Archiva 2.0 | Configuring Archiva Daemon 
+  sudo: yes
+  shell: cp /opt/apache-archiva-2.0.1/bin/archiva /etc/init.d/
+  tags: archiva
+
+- name: Apache Archiva 2.0 | Configuring Archiva Daemon 
+  sudo: yes
+  lineinfile: dest=/etc/init.d/archiva regexp="^BASEDIR=" insertafter="state=present" line="BASEDIR='/opt/apache-archiva-2.0.1/bin/'"
+  tags: archiva
+
+- name: Apache Archiva 2.0 | Configuring Archiva Daemon 
+  sudo: yes
+  lineinfile: dest=/etc/init.d/archiva regexp="^WRAPPER=" insertafter="state=present" line="BASEDIR='/opt/apache-archiva-2.0.1/bin/'"
+  tags: archiva
+
+- name: Apache Archiva 2.0 | Configuring Archiva Daemon 
+  sudo: yes
+  shell: cd /etc/init.d/ && update-rc.d archiva defaults 80
+  tags: archiva
+
+- name: Apache Archiva 2.0 | Starting archiva Service
+  sudo: yes
+  shell: /etc/init.d/archiva start
+  tags: archiva
+
+

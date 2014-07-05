@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: ng-ipx-pbxejbclient.jar 
+ ng-ipx-hibernatedao.sar
+

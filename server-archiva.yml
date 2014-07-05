@@ -1,0 +1,8 @@
+---
+- hosts: all
+  user: vagrant
+
+  tasks:
+    - include: tasks/common.yml
+    - include: tasks/oracle-java-7.yml
+    - include: tasks/apache-archiva.yml

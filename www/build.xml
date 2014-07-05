@@ -1,0 +1,98 @@
+<project name="Build_NG-IPX-PBXEJB" default="jar" basedir=".">
+
+	<property file="../IPX-Unit/scripts/user.properties" />
+	<property file="../IPX-Unit/scripts/build.properties" />
+
+	<path id="classpath">
+
+		<fileset dir="${commons.dist}">
+			<include name="*.jar" />
+		</fileset>
+		
+		<fileset dir="${prompts.dist}">
+	    	<include name="*.jar" />
+    	</fileset>	
+		
+		<fileset dir="${log4j.jars}">
+			<include name="*.jar" />
+		</fileset>
+		
+		<fileset dir="${pojo.dist}">
+			<include name="*.jar" />
+		</fileset>		
+
+		<fileset dir="${jboss.jars}">
+			<include name="*.jar" />
+		</fileset>
+		
+		<fileset dir="${prompts.dist}">
+			<include name="*.jar" />
+		</fileset>
+
+	</path>
+
+	<target name="init" description="Initialize stuff">
+		<typedef file="${unit.scripts}/antTasks.xml" />
+		<mkdir dir="${pbxEJB.dist}"/>
+		<mkdir dir="${pbxEJB.build}"/>
+		<mkdir dir="${pbxEJB.build}/META-INF" />
+	</target>
+
+	<target name="compile" depends="init" description="Compile the source">
+		
+		<vt-version>
+			<javac destdir="${pbxEJB.build}" debug="on" deprecation="on" optimize="on" classpathref="classpath">
+				<src path="${pbxEJB.dao.src}" />
+			</javac>
+		
+			<javac destdir="${pbxEJB.build}" debug="on" deprecation="on" optimize="on" classpathref="classpath">
+				<src path="${pbxEJB.mail.src}" />
+			</javac>
+			
+			<javac destdir="${pbxEJB.build}" debug="on" deprecation="on" optimize="on" classpathref="classpath">
+				<src path="${pbxEJB.rule.src}" />
+			</javac>
+
+			<javac destdir="${pbxEJB.build}" debug="on" deprecation="on" optimize="on" classpathref="classpath">
+				<src path="${pbxEJB.ejbmodule.src}" />
+			</javac>
+		</vt-version>
+
+		<ant antfile="${pbxEJBClient.path}/build.xml" inheritall="false" />
+		
+		<copy todir="${pbxEJB.build}">
+			<fileset dir="${pbxEJB.rule.src}">
+				<include name="*.properties" />
+			</fileset>
+		</copy>
+
+		<vt-makeejbclientxml file="${pbxEJB.ejbmodule.src}/META-INF/ejb-jar.xml" jarFolder="${pbxEJBClient.dist}" destFile="${pbxEJB.ejbmodule.src}/ejb-jar.xml" />
+		<copy todir="${pbxEJB.build}/META-INF">
+			<fileset file="${pbxEJB.ejbmodule.src}/META-INF/MANIFEST.MF" />
+			<fileset file="${pbxEJB.ejbmodule.src}/META-INF/jboss.xml" />
+			<fileset file="${pbxEJB.ejbmodule.src}/ejb-jar.xml" />
+		</copy>
+		
+		<copy todir="${pbxEJB.build}/br/com/voicetechnology/ipx/mail/formatter/">
+			<fileset dir="${pbxEJB.mail.src}/br/com/voicetechnology/ipx/mail/formatter/">
+				<include name="*.html" />
+			</fileset>
+		</copy>
+
+		<copy todir="${pbxEJB.build}/br/com/voicetechnology/ng/ipx/rule/implement/voicemail/">
+			<fileset dir="${pbxEJB.rule.src}/br/com/voicetechnology/ng/ipx/rule/implement/voicemail/">
+				<include name="*.properties" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="jar" depends="compile">
+		<vt-version>
+			<jar 
+				jarfile="${pbxEJB.dist}/${pbxEJB.jar}" 
+				basedir="${pbxEJB.build}" 
+				manifest="${pbxEJB.build}/META-INF/MANIFEST.MF"
+			/>
+		</vt-version>
+	</target>
+</project>
