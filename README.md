@@ -21,6 +21,11 @@ If you have some problem initializing Jenkins you can check the logs files and r
     $ tail -f /var/log/jenkins/jenkins.log
     $ sudo /etc/init.d/jenkins restart
 
+Install on remote machine using ansible:
+
+    $ ansible-playbook server-archiva.yml --private-key=<your private key>  -i hosts --user=<username>
+    $ ansible-playbook server-jenkins.yml --private-key=<your private key>  -i hosts --user=<username>
+
 TODO 
 
 - Create virtual machine for private GIT repository 
